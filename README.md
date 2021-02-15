@@ -22,3 +22,4 @@ npx sequelize-cli seed:generate --name roles
 
 npx sequelize-cli seed:generate --name user_roles
 
+npx sequelize-cli model:generate --name house --attributes city:string,state:string,district:string,address:string,description:string,price:string,owner:string,imageUrl:string,roomQuantity:integer,bathroomQuantity:integer,balconyQuantity:integer,carSpotQuantity:integer,rentStartDate:date,rentEndDate:date,availableForRentStartDate:date,availableForRentEndDate:date
