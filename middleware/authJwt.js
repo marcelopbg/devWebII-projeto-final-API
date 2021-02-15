@@ -1,21 +1,21 @@
 const jwt = require("jsonwebtoken");
-const config = require("../config/auth.secret");
+const secret = require("../config/auth.secret");
 const db = require("../models");
 const User = db.user;
 
 verifyToken = (req, res, next) => {
   let token = req.headers["x-access-token"];
-
   if (!token) {
     return res.status(403).send({
-      message: "No token provided!"
+      message: "Token não recebido!"
     });
   }
 
-  jwt.verify(token, config.secret, (err, decoded) => {
+  jwt.verify(token, secret, (err, decoded) => {
+    console.log(err);
     if (err) {
       return res.status(401).send({
-        message: "Unauthorized!"
+        message: "Ação não autorizada!"
       });
     }
     req.userId = decoded.id;
@@ -27,54 +27,49 @@ isAdmin = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     user.getRoles().then(roles => {
       for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "admin") {
+        if (roles[i].name === "Administrador") {
           next();
           return;
         }
       }
 
       res.status(403).send({
-        message: "Require Admin Role!"
+        message: "Ação exclusiva para administrador!"
       });
       return;
-    });
+    })
   });
 };
 
-isModerator = (req, res, next) => {
+isUser = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     user.getRoles().then(roles => {
       for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "moderator") {
+        if (roles[i].name === "Corretor") {
           next();
           return;
         }
       }
 
       res.status(403).send({
-        message: "Require Moderator Role!"
+        message: "É necessário ser corretor para executar esta ação "
       });
     });
   });
 };
 
-isModeratorOrAdmin = (req, res, next) => {
+isUserOrAdmin = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     user.getRoles().then(roles => {
       for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "moderator") {
-          next();
-          return;
-        }
-
-        if (roles[i].name === "admin") {
+        if (roles[i].name === "Administrador" || roles[i].name === "Corretor") {
           next();
           return;
         }
       }
 
       res.status(403).send({
-        message: "Require Moderator or Admin Role!"
+        message: "É necessário ser administrador ou moderador para executar esta ação"
       });
     });
   });
@@ -83,7 +78,7 @@ isModeratorOrAdmin = (req, res, next) => {
 const authJwt = {
   verifyToken: verifyToken,
   isAdmin: isAdmin,
-  isModerator: isModerator,
-  isModeratorOrAdmin: isModeratorOrAdmin
+  isUser: isUser,
+  isUserOrAdmin: isUserOrAdmin
 };
 module.exports = authJwt;

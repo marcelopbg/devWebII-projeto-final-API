@@ -16,29 +16,14 @@ const signup = (req, res) => {
     password: bcrypt.hashSync(req.body.password, 8)
   })
     .then(user => {
-      if (req.body.roles) {
-        Role.findAll({
-          where: {
-            name: {
-              [Op.or]: req.body.roles
-            }
-          }
-        }).then(roles => {
-          user.setRoles(roles).then(() => {
-            res.send({ message: "User registered successfully!" });
-          });
-        });
-      } else {
-        // user role = 1
-        user.setRoles([1]).then(() => {
-          res.send({ message: "User registered successfully!" });
-        });
-      }
+        user.setRoles([2]).then(() => {
+          res.send({ message: "Corretor Cadastrado com sucesso!!" });
     })
     .catch(err => {
       res.status(500).send({ message: err.message });
     });
-};
+});
+}
 
 const signin = (req, res) => {
   User.findOne({
@@ -48,7 +33,7 @@ const signin = (req, res) => {
   })
     .then(user => {
       if (!user) {
-        return res.status(404).send({ message: "User Not found." });
+        return res.status(404).send({ message: "Usuário não encontrado." });
       }
 
       var passwordIsValid = bcrypt.compareSync(
@@ -59,7 +44,7 @@ const signin = (req, res) => {
       if (!passwordIsValid) {
         return res.status(401).send({
           accessToken: null,
-          message: "Invalid Password!"
+          message: "Senha incorreta!"
         });
       }
 
