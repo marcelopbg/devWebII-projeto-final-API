@@ -6,7 +6,7 @@ npx sequelize-cli db:migrate
 
 npx sequelize-cli db:seed:all
 
-npm start
+npm run live
 
 # Commands used to generate Database
 
