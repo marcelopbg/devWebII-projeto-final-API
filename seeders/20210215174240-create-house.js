@@ -9,11 +9,11 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert('houses', [{
       city: 'Camboriú',
-      state: 'SC',
+      state: 'Santa Catarina',
       district: 'Areias',
       address: 'Endereço Fictício',
       description:' Nome do prédio',
-      price: 'R$ 13,00',
+      price: 13.30,
       owner: 'Josenildo',
       imageUrl: null,
       roomQuantity: 3,
@@ -21,7 +21,7 @@ module.exports = {
       balconyQuantity: 3,
       carSpotQuantity: 4,
       availableForRentStartDate:new Date(),
-      availableForRentEndDate: new Date().addDays(5),
+      availableForRentEndDate: new Date().addDays(30),
       // availableForRentEndDate: new Date().setDate(new Date() + 1),
       }], {});
   []
