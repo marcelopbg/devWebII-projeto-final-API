@@ -44,8 +44,6 @@ const getHouses = (req, res, next) => {
 
 
 const storeHouse = (req, res, next) => {
-    console.log('chegou no store')
-    console.log(JSON.stringify(req.body))
     return House.create({
         ...req.body
     })
