@@ -1,6 +1,7 @@
 const db = require("../models");
 const House = db.house;
 const { Op } = require("sequelize");
+
 const getHouses = (req, res, next) => {
     if (req.query) {
         let mappedWhere = {}
@@ -53,4 +54,16 @@ const uploadHousePicture = (req, res, next) => {
     });
 }
 
-module.exports = { getHouses, uploadHousePicture }
+const storeHouse = (req, res, next) => {
+    return House.create({
+        ...req.body
+    })
+        .then(house => {
+            res.send({ message: house});
+        })
+        .catch(err => {
+          res.status(500).send({ message: err.message });
+        });
+ }
+
+module.exports = { getHouses, storeHouse, uploadHousePicture }
