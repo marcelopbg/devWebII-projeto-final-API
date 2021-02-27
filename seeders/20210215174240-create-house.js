@@ -22,6 +22,8 @@ module.exports = {
       carSpotQuantity: 4,
       availableForRentStartDate:new Date(),
       availableForRentEndDate: new Date().addDays(30),
+      createdAt: new Date(),
+      updatedAt: new Date()
       }], {});
   []
   },
