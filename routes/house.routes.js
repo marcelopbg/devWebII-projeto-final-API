@@ -15,7 +15,14 @@ module.exports = function(app) {
       "/api/house",
       [authJwt.verifyToken,
         authJwt.isUserOrAdmin],
-      controller.getHouses
+      controller.getHouses,
     );
+
+    app.post(
+      "/api/house",
+      [authJwt.verifyToken,
+        authJwt.isUserOrAdmin],
+      controller.storeHouse,
+    )
   };
   

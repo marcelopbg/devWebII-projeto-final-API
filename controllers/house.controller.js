@@ -42,4 +42,19 @@ const getHouses = (req, res, next) => {
         });
 };
 
-module.exports = { getHouses }
+
+const storeHouse = (req, res, next) => {
+    console.log('chegou no store')
+    console.log(JSON.stringify(req.body))
+    return House.create({
+        ...req.body
+    })
+        .then(house => {
+            res.send({ message: house});
+        })
+        .catch(err => {
+          res.status(500).send({ message: err.message });
+        });
+ }
+
+module.exports = { getHouses, storeHouse }
