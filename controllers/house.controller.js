@@ -3,7 +3,6 @@ const House = db.house;
 const { Op } = require("sequelize");
 const getHouses = (req, res, next) => {
     if (req.query) {
-        console.log(req.query);
         let mappedWhere = {}
         Object.entries(req.query).map(([key, value]) => {
             if (Array.isArray(value)) {
@@ -17,7 +16,6 @@ const getHouses = (req, res, next) => {
             } else {
                 mappedWhere[key] = value;
             }
-            console.log(mappedWhere);
         })
         House.findAll({
             where:
@@ -42,4 +40,17 @@ const getHouses = (req, res, next) => {
         });
 };
 
-module.exports = { getHouses }
+const uploadHousePicture = (req, res, next) => {
+    const { INIT_CWD } = process.env;
+    let imageFile = req.files.file;
+    const fileName = `${imageFile.name.slice(0, imageFile.name.lastIndexOf('.'))}-${new Date().getTime()}`;
+    const ext = imageFile.name.slice(imageFile.name.lastIndexOf('.'), imageFile.name.length);
+    imageFile.mv(`${INIT_CWD}/public/${fileName}${ext}`, function (err) {
+      if (err) {
+        return res.status(500).send(err);
+      }
+      res.json({file: `/public/${fileName}${ext}`});
+    });
+}
+
+module.exports = { getHouses, uploadHousePicture }
