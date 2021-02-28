@@ -17,7 +17,10 @@ module.exports = (app) => {
     controller.getHouses
   );
 
-  app.post('/api/house/upload',
-    controller.uploadHousePicture
-  );
+  app.post(
+    "/api/house",
+    [authJwt.verifyToken,
+      authJwt.isUserOrAdmin],
+    controller.storeHouse,
+  )
 };
