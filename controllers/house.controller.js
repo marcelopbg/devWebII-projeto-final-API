@@ -4,37 +4,48 @@ const Rent = db.rent;
 const { Op } = require("sequelize");
 
 const getHouses = (req, res, next) => {
-    // if (req.query) {
-    //     let mappedWhere = {}
-    //     Object.entries(req.query).map(([key, value]) => {
-    //         if (Array.isArray(value)) {
-    //             if (value[0] === "between") {
-    //                 mappedWhere[key] = { [Op.between]: [value[1], value[2]] }
-    //             }
-    //             if (value[0] == "dateRangeBetween") {
-    //                 mappedWhere.availableForRentStartDate = { [Op.lte]: new Date(value[1]) };
-    //                 mappedWhere.availableForRentEndDate = { [Op.gte]: new Date(value[2]) }
-    //             }
-    //         } else {
-    //             mappedWhere[key] = value;
-    //         }
-    //     })
-    //     House.findAll({
-    //         where:
-    //             mappedWhere
-    //     }).then(houses => {
-    //         res.send(houses);
-    //     })
-    //         .catch(function (err) {
-    //             console.log('DB ERROR: ' + err.message);
-    //             res.status(500);
-    //             next(err);
-    //         });
-    //     return;
-    // }
+    if (req.query) {
+        let mappedWhere = {}
+        Object.entries(req.query).map(([key, value]) => {
+            if (Array.isArray(value)) {
+                if (value[0] === "between" && value[1] && value[2] === 'null') {
+                    mappedWhere[key] = { [Op.gte]: value[1] }
+                }
+                if (value[0] === "between" && value[1] === 'null' && value[2]) {
+                    mappedWhere[key] = { [Op.lte]: value[2] }
+                }
+                if (value[0] === "between" && value[1] != 'null' && value[2] != 'null') {
+                    console.log(value);
+                    mappedWhere[key] = { [Op.between]: [value[1], value[2]] }
+                }
+                if (value[0] == "dateRangeBetween") {
+                    if(value[1]) {
+                        mappedWhere.availableForRentStartDate = { [Op.gte]: new Date(value[1]) };
+                    }
+                    if(value[2]) {
+                        mappedWhere.availableForRentEndDate = { [Op.lte]: new Date(value[2]) };
+                    }
+                }
+            } else {
+                mappedWhere[key] = value;
+            }
+        })
+        House.findAll({
+            include: Rent, 
+            where:
+                mappedWhere
+        }).then(houses => {
+            res.send(houses);
+        })
+            .catch(function (err) {
+                console.log('DB ERROR: ' + err.message);
+                res.status(500);
+                next(err);
+            });
+        return;
+    }
     House.findAll(
         { include: Rent }).then(houses => {
-        // console.log(houses.rent)
         res.send(houses);
     })
         .catch(function (err) {
