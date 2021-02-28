@@ -34,7 +34,7 @@ const getHouses = (req, res, next) => {
     // }
     House.findAll(
         { include: Rent }).then(houses => {
-        console.log(houses.rent)
+        // console.log(houses.rent)
         res.send(houses);
     })
         .catch(function (err) {

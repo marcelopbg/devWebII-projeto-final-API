@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       house_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       tenant: {
         type: Sequelize.STRING
